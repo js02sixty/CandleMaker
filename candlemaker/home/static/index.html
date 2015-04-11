@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" ng-app="cmApp">
+<head ng-controller="MainCtrl">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--<title>{{ Page.title() }}</title>-->
+    <title ng-bind="Page.title()"></title>
+    <!-- <link rel="stylesheet" href="bower_components/normalize.css/normalize.css"> -->
+    <link rel="stylesheet" href="css/style.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href='http://fonts.googleapis.com/css?family=Raleway' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Josefin+Sans' rel='stylesheet' type='text/css'>
+</head>
+<body>
+    <aside id="sidebar" ng-init="offCanvas=true" ng-class="offCanvas ? 'sidebar':'sidebar on'">
+        <nav ng-click="offCanvas=true">
+            <ul>
+                <li ng-class="{active: isActive('/')}"><a href="/">Home</a></li>
+                <li ng-class="{active: isActive('/products')}"><a href="/products">Products</a></li>
+                <li ng-class="{active: isActive('/about')}"><a href="/about">About</a></li>
+                <li ng-class="{active: isActive('/contact')}"><a href="/contact">Contact</a></li>
+                <li ng-class="{active: isActive('/admin')}"><a href="/admin">Admin</a></li>
+            </ul>
+        </nav>
+    </aside>
+    <div id="canvas" ng-class="offCanvas ? 'canvas':'canvas off'">
+        <section class="container">
+            <header>
+                <nav class="full" ng-controller="HeaderCtrl">
+                    <ul>
+                        <li ng-class="{active: isActive('/')}"><a href="/">Home</a></li>
+                        <li ng-class="{active: isActive('/products')}"><a href="/products">Products</a></li>
+                        <li ng-class="{active: isActive('/about')}"><a href="/about">About</a></li>
+                        <li ng-class="{active: isActive('/contact')}"><a href="/contact">Contact</a></li>
+                        <li ng-class="{active: isActive('/admin')}"><a href="/admin">Admin</a></li>
+                        <li><a href="/cart"></a><i class="fa fa-shopping-cart"></i></li>
+
+                    </ul>
+                </nav>
+                <nav class="small">
+                    <i class="fa fa-bars fa-lg" ng-click="offCanvas=!offCanvas"></i>
+                    <span><em>Requiescents.com</em></span>
+                </nav>
+            </header>
+
+            <main>
+                <section id="menu">
+                    <div class="panel">
+                        <h2>menu</h2>
+                    </div>
+                </section>
+                <section id="content" ng-view></section>
+            </main>
+
+            <footer>
+            </footer>
+
+        </section>
+    </div>
+
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-route/angular-route.min.js"></script>
+<script src="bower_components/angular-animate/angular-animate.js"></script>
+<script src="js/app.js"></script>
+<script src="js/services.js"></script>
+<script src="js/controllers.js"></script>
+
+</body>
+</html>
