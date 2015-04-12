@@ -51,6 +51,7 @@ class UserGroupListApi(Resource):
     @auth.login_required
     @marshal_with(user_group_fields)
     def post(self):
+        """May decide latter to remove posting of new groups."""
         if group_check(auth.username(), 'administrators'):
             args = parser.parse_args()
             user_group = UserGroup()
