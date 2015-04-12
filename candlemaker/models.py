@@ -10,6 +10,10 @@ class UserGroup(Base):
     __tablename__ = 'user_groups'
     id = Column(Integer, primary_key=True)
     name = Column(String(20))
+    createdby = Column(String(30))
+    editedby = Column(String(30))
+    created = Column(DateTime, default=datetime.utcnow)
+    edited = Column(DateTime, onupdate=datetime.utcnow())
     users = relationship('User', backref='group')
 
 
@@ -22,6 +26,8 @@ class User(Base):
     last_name = Column(String(30))
     email = Column(String(30))
     group_id = Column(Integer, ForeignKey('user_groups.id'))
+    createdby = Column(String(30))
+    editedby = Column(String(30))    
     created = Column(DateTime, default=datetime.utcnow)
     edited = Column(DateTime, onupdate=datetime.utcnow())
 
@@ -54,6 +60,8 @@ class Note(Base):
     __tablename__ = 'notes'
     id = Column(Integer, primary_key=True)
     note = Column(Text, nullable=False)
+    createdby = Column(String(30))
+    editedby = Column(String(30))    
     created = Column(DateTime, default=datetime.utcnow)
     edited = Column(DateTime, onupdate=datetime.utcnow())
 

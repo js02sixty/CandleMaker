@@ -6,21 +6,32 @@ Created on Apr 6, 2015
 
 from flask import Blueprint
 from flask_restful import Api, abort
-from flask_httpauth import HTTPDigestAuth
+from flask_httpauth import HTTPDigestAuth, HTTPBasicAuth
 from candlemaker.models import User
 from flask_restful import Resource, reqparse
+from sqlalchemy.orm.exc import NoResultFound
 
-auth = HTTPDigestAuth()
+auth = HTTPBasicAuth()
+
+@auth.error_handler
+def auth_error():
+    abort(401)
 
 @auth.get_password
 def get_pw(username):
-    users = User.query.filter(User.username == username).one()  # @UndefinedVariable
-    if username == users.username:
-        return users.password
-    return None
+    try:
+        users = User.query.filter(User.username == username).one()  # @UndefinedVariable
+        if username == users.username:
+            return users.password
+    except NoResultFound:
+        return False
+    
 
 def group_check(user, group):
-    u = User.query.filter(User.username == user).first()  # @UndefinedVariable
+    try:
+        u = User.query.filter(User.username == user).first()  # @UndefinedVariable
+    except NoResultFound:
+        pass
     if group in u.group.name:
         return True
 
@@ -34,10 +45,10 @@ errors = {
         'message': 'Record not found!',
         'status': 404
     },
-    'NoResultFound': {
-        'message': 'Not Found',
-        'status': 404
-    }
+#     'NoResultFound': {
+#         'message': 'Not Found',
+#         'status': 404
+#     }
 }
 
 
@@ -46,10 +57,12 @@ api = Api(apiv1, errors=errors)
 
 
 class Info(Resource):
-    
     @auth.login_required
     def get(self):
-        return {'message': 'hello ' + auth.username()}
+        if group_check(auth.username(), 'administrators'):
+            return {'message': 'hello ' + auth.username()}
+        else:
+            abort(401)
 
 from candlemaker.apiv1.resources.users import UserListApi, UserApi
 from candlemaker.apiv1.resources.user_groups import UserGroupListApi, UserGroupApi
@@ -63,7 +76,7 @@ from candlemaker.apiv1.resources.products import (
 from candlemaker.apiv1.resources.site_initialization import (
     InitializeDB, InitSampleDB)
 
-api.add_resource(Info, '/')
+api.add_resource(Info, '')
 api.add_resource(InitializeDB, '/initdb')
 api.add_resource(InitSampleDB, '/initsampledb')
 api.add_resource(UserListApi, '/users')
