@@ -4,8 +4,8 @@ Created on Apr 6, 2015
 @author: js02sixty
 '''
 
-from database import db_session
-from models import User, UserGroup, Product, Note
+from candlemaker.database import db_session
+from candlemaker.models import User, UserGroup, Product, Note
 
 
 def load_default():

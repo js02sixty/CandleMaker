@@ -26,14 +26,14 @@ class NoteApi(Resource):
         note = Note.query.filter(  # @UndefinedVariable
             Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404, message="Note {} doesn't exist".format(note_id))  # @UndefinedVariable            
+            abort(404)  # @UndefinedVariable            
         return note
     
     def delete(self, note_id):
         note = Note.query.filter(  # @UndefinedVariable
             Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404, message="Note {} doesn't exist".format(note_id))  # @UndefinedVariable
+            abort(404)  # @UndefinedVariable
         db_session.delete(note)
         db_session.commit()
         return {}, 204
@@ -44,7 +44,7 @@ class NoteApi(Resource):
         note = Note.query.filter(  # @UndefinedVariable
             Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404, message="Note {} doesn't exist".format(note_id))  # @UndefinedVariable
+            abort(404)  # @UndefinedVariable
         note.note = args['note']
         db_session.add(note)
         db_session.commit()

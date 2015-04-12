@@ -70,4 +70,4 @@ target/
 
 # Filesystems
 .*.swp
-
+scratch.py

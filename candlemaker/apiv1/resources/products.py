@@ -6,6 +6,7 @@ Created on Apr 8, 2015
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
 from candlemaker.models import Product, Note
 from candlemaker.database import db_session
+from candlemaker.apiv1 import auth, group_check
 
 
 note_fields = {
@@ -48,20 +49,24 @@ class ProductListApi(Resource):
         user = Product.query.all()  # @UndefinedVariable
         return user
 
+    @auth.login_required
     @marshal_with(product_fields)
     def post(self):
-        args = product_parser.parse_args()
-        product = Product(
-            name=args['name'],
-            description=args['description'],
-            weight=args['weight'],
-            price=args['price'],
-            pic_url=args['pic_url'],
-            category_id=args['category_id']
-        )
-        db_session.add(product)
-        db_session.commit()
-        return product, 201
+        if group_check(auth.username(), 'administrators'):
+            args = product_parser.parse_args()
+            product = Product(
+                name=args['name'],
+                description=args['description'],
+                weight=args['weight'],
+                price=args['price'],
+                pic_url=args['pic_url'],
+                category_id=args['category_id']
+            )
+            db_session.add(product)
+            db_session.commit()
+            return product, 201
+        else:
+            abort(401)
 
 
 class ProductApi(Resource):
@@ -71,25 +76,27 @@ class ProductApi(Resource):
         product = Product.query.filter(  # @UndefinedVariable
             Product.id == product_id).first()  # @UndefinedVariable
         if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
+            abort(404)
         return product
 
+    @auth.login_required  
     def delete(self, product_id):
         product = Product.query.filter(  # @UndefinedVariable
             Product.id == product_id).first()  # @UndefinedVariable
         if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
+            abort(404)
         db_session.delete(product)
         db_session.commit()
         return {}, 204
 
+    @auth.login_required
     @marshal_with(product_fields)
     def put(self, product_id):
         args = product_parser.parse_args()
         product = Product.query.filter(  # @UndefinedVariable
             Product.id == product_id).first()  # @UndefinedVariable
         if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
+            abort(404)
         product.name = args['name']
         product.description = args['description'],
         product.weight = args['weight']
@@ -108,21 +115,25 @@ class ProductNoteListApi(Resource):
         product = Product.query.filter(  # @UndefinedVariable
             Product.id == product_id).first()  # @UndefinedVariable
         if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
+            abort(404)
         return product.notes
 
+    @auth.login_required
     @marshal_with(note_fields)
     def post(self, product_id):
-        args = note_parser.parse_args()
-        note = Note(note=args['note'])
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
-        if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
-        product.notes.append(note)
-        db_session.add(product)
-        db_session.commit()
-        return note, 201
+        if group_check(auth.username(), 'administrators'):
+            args = note_parser.parse_args()
+            note = Note(note=args['note'])
+            product = Product.query.filter(  # @UndefinedVariable
+                Product.id == product_id).first()  # @UndefinedVariable
+            if not product:
+                abort(404)
+            product.notes.append(note)
+            db_session.add(product)
+            db_session.commit()
+            return note, 201
+        else:
+            abort(401)
 
 
 class ProductNoteApi(Resource):
@@ -132,34 +143,36 @@ class ProductNoteApi(Resource):
         product = Product.query.filter(  # @UndefinedVariable
             Product.id == product_id).first()  # @UndefinedVariable
         if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
+            abort(404)
         note = Note.query.filter(Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404, message="Note {} doesn't exist".format(note_id))
+            abort(404)
         return note
 
+    @auth.login_required
     def delete(self, product_id, note_id):
         product = Product.query.filter(  # @UndefinedVariable
             Product.id == product_id).first()  # @UndefinedVariable
         if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
+            abort(404)
         note = Note.query.filter(Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404, message="Note {} doesn't exist".format(note_id))
+            abort(404)
         product.notes.remove(note)
         db_session.commit()
         return {}, 204
 
+    @auth.login_required
     @marshal_with(note_fields)
     def put(self, product_id, note_id):
         args = note_parser.parse_args()
         product = Product.query.filter(  # @UndefinedVariable
             Product.id == product_id).first()  # @UndefinedVariable
         if not product:
-            abort(404, message="Product {} doesn't exist".format(product_id))
+            abort(404)
         note = Note.query.filter(Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404, message="Note {} doesn't exist".format(note_id))
+            abort(404)
         note.note = args['note']
         db_session.add(note)
         db_session.commit()

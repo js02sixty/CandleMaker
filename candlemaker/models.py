@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy import Column, Table, Integer, String, \
-    Text, DateTime, Numeric
+    Text, DateTime, Numeric, Boolean
 from .database import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
@@ -40,9 +40,12 @@ class Product(Base):
     weight = Column(Numeric(precision=8, scale=4))
     price = Column(Numeric(precision=5, scale=2))
     pic_url = Column(String(30))
+    forsale = Column(Boolean)
     category_id = Column(Integer)
     notes = relationship('Note', secondary=product_note,
                          backref='products', single_parent=True, cascade="all, delete-orphan")
+    createdby = Column(String(30))
+    editedby = Column(String(30))
     created = Column(DateTime, default=datetime.utcnow)
     edited = Column(DateTime, onupdate=datetime.utcnow())
 
@@ -65,3 +68,8 @@ class ProductType(Base):
     __tablename__ = 'product_types'
     id = Column(Integer, primary_key=True)
     type = Column(String(30))
+    
+    
+class SiteSettings(Base):
+    __tablename__ = 'site_settings'
+    items_per_page = Column(Integer, primary_key=True)
