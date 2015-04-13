@@ -5,7 +5,7 @@ Created on Apr 6, 2015
 '''
 
 from flask import Blueprint
-from flask_restful import Api, abort
+from flask_restful import Api, abort, wraps
 from flask_httpauth import HTTPDigestAuth, HTTPBasicAuth
 from candlemaker.models import User
 from flask_restful import Resource, reqparse
@@ -30,10 +30,11 @@ def get_pw(username):
 def group_check(user, group):
     try:
         u = User.query.filter(User.username == user).first()  # @UndefinedVariable
+        if group in u.group.name:
+            return True        
     except NoResultFound:
-        pass
-    if group in u.group.name:
-        return True
+        return False
+
 
     
 errors = {
@@ -45,10 +46,10 @@ errors = {
         'message': 'Record not found!',
         'status': 404
     },
-#     'NoResultFound': {
-#         'message': 'Not Found',
-#         'status': 404
-#     }
+    'NoResultFound': {
+        'message': 'Not Found',
+        'status': 404
+    }
 }
 
 
@@ -57,12 +58,11 @@ api = Api(apiv1, errors=errors)
 
 
 class Info(Resource):
+    
     @auth.login_required
     def get(self):
-        if group_check(auth.username(), 'administrators'):
-            return {'message': 'hello ' + auth.username()}
-        else:
-            abort(401)
+        return {'message': 'hello ' + auth.username()}
+
 
 from candlemaker.apiv1.resources.users import UserListApi, UserApi
 from candlemaker.apiv1.resources.user_groups import UserGroupListApi, UserGroupApi

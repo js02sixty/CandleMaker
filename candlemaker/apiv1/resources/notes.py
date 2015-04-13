@@ -3,7 +3,7 @@ Created on Apr 9, 2015
 
 @author: js02sixty
 '''
-from flask_restful import Resource, fields, marshal_with, reqparse
+from flask_restful import Resource, fields, marshal_with, reqparse, abort
 from candlemaker.models import Note
 from candlemaker.database import db_session
 
@@ -26,27 +26,26 @@ class NoteApi(Resource):
         note = Note.query.filter(  # @UndefinedVariable
             Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404)  # @UndefinedVariable            
+            abort(404)
         return note
-    
+
     def delete(self, note_id):
         note = Note.query.filter(  # @UndefinedVariable
             Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404)  # @UndefinedVariable
-        db_session.delete(note)
-        db_session.commit()
+            abort(404)
+        db_session.delete(note)  # @UndefinedVariable
+        db_session.commit()  # @UndefinedVariable
         return {}, 204
-    
+
     @marshal_with(note_fields)
     def put(self, note_id):
         args = note_parser.parse_args()
         note = Note.query.filter(  # @UndefinedVariable
             Note.id == note_id).first()  # @UndefinedVariable
         if not note:
-            abort(404)  # @UndefinedVariable
+            abort(404)
         note.note = args['note']
-        db_session.add(note)
-        db_session.commit()
+        db_session.add(note)  # @UndefinedVariable
+        db_session.commit()  # @UndefinedVariable
         return note, 201
-    
