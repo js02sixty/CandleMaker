@@ -6,7 +6,7 @@ Created on Apr 12, 2015
 
 from flask import Blueprint
 
-client = Blueprint('home', __name__, static_folder='static', static_url_path='')
+client = Blueprint('home', __name__, static_folder='app', static_url_path='')
 
 @client.route('/')
 @client.route('/admin')
