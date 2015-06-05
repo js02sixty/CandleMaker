@@ -25,18 +25,18 @@ def get_pw(username):
             return users.password
     except NoResultFound:
         return False
-    
+
 
 def group_check(user, group):
     try:
         u = User.query.filter(User.username == user).first()  # @UndefinedVariable
         if group in u.group.name:
-            return True        
+            return True
     except NoResultFound:
         return False
 
 
-    
+
 errors = {
     'IntegrityError': {
         'message': 'Record already exists!',
@@ -56,9 +56,8 @@ errors = {
 apiv1 = Blueprint('apiv1', __name__, url_prefix='/api/v1')
 api = Api(apiv1, errors=errors)
 
-
 class Info(Resource):
-    
+
     @auth.login_required
     def get(self):
         return {'message': 'hello ' + auth.username()}

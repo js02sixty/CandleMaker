@@ -9,6 +9,12 @@ app = Flask(__name__)
 app.config.from_object('candlemaker.default_settings')
 app.config.from_envvar('CANDLEMAKER_SETTINGS', silent=True)
 
+from candlemaker.database import db_session
+
+@app.teardown_appcontext
+def shutdown_session(exception=None):
+    db_session.remove()
+
 # from candlemaker.home import home
 from candlemaker.client import client
 from candlemaker.apiv1 import apiv1

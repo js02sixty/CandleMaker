@@ -6,5 +6,5 @@ Created on Apr 6, 2015
 
 
 DEBUG = True
-DATABASE_SETTINGS = 'postgresql+psycopg2://js02sixty:Tc120807@127.0.0.1:5432/candlemaker2'
+DATABASE_SETTINGS = 'postgresql+psycopg2://candlemaker:Security#321@127.0.0.1:5432/candlemaker'
 SECRET_KEY = 'password'
