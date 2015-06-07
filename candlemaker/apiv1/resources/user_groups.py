@@ -28,7 +28,7 @@ user_group_fields = {
     'createdby': fields.String,
     'editedby': fields.String,
     'created': fields.DateTime,
-    'edited': fields.DateTime,    
+    'edited': fields.DateTime,
     'users': fields.Nested(user_fields)
 }
 
@@ -43,7 +43,7 @@ class UserGroupListApi(Resource):
     @marshal_with(user_group_fields)
     def get(self):
         if group_check(auth.username(), 'administrators'):
-            user_group = UserGroup.query.all()  # @UndefinedVariable
+            user_group = UserGroup.query.all()
             return user_group
         else:
             abort(401)
@@ -57,8 +57,8 @@ class UserGroupListApi(Resource):
             user_group = UserGroup()
             user_group.name = args['name']
             user_group.createdby = auth.username()
-            db_session.add(user_group)  # @UndefinedVariable
-            db_session.commit()  # @UndefinedVariable
+            db_session.add(user_group)
+            db_session.commit()
             return user_group, 201
         else:
             abort(401)
@@ -68,7 +68,8 @@ class UserGroupApi(Resource):
 
     @marshal_with(user_group_fields)
     def get(self, user_group_id):
-        user_group = UserGroup.query.filter(UserGroup.id == user_group_id).first()  # @UndefinedVariable
+        user_group = UserGroup.query.filter(
+            UserGroup.id == user_group_id).first()
         if not user_group:
             abort(404)
         return user_group

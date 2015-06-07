@@ -1,3 +1,3 @@
-source env/bin/activate
+source env / bin / activate
 
 ipython runserver.py

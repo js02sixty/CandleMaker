@@ -46,7 +46,7 @@ class ProductListApi(Resource):
 
     @marshal_with(product_fields)
     def get(self):
-        user = Product.query.all()  # @UndefinedVariable
+        user = Product.query.all()
         return user
 
     @auth.login_required
@@ -73,16 +73,16 @@ class ProductApi(Resource):
 
     @marshal_with(product_fields)
     def get(self, product_id):
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
+        product = Product.query.filter(
+            Product.id == product_id).first()
         if not product:
             abort(404)
         return product
 
-    @auth.login_required  
+    @auth.login_required
     def delete(self, product_id):
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
+        product = Product.query.filter(
+            Product.id == product_id).first()
         if not product:
             abort(404)
         db_session.delete(product)
@@ -93,8 +93,8 @@ class ProductApi(Resource):
     @marshal_with(product_fields)
     def put(self, product_id):
         args = product_parser.parse_args()
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
+        product = Product.query.filter(
+            Product.id == product_id).first()
         if not product:
             abort(404)
         product.name = args['name']
@@ -112,8 +112,8 @@ class ProductNoteListApi(Resource):
 
     @marshal_with(note_fields)
     def get(self, product_id):
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
+        product = Product.query.filter(
+            Product.id == product_id).first()
         if not product:
             abort(404)
         return product.notes
@@ -124,8 +124,8 @@ class ProductNoteListApi(Resource):
         if group_check(auth.username(), 'administrators'):
             args = note_parser.parse_args()
             note = Note(note=args['note'])
-            product = Product.query.filter(  # @UndefinedVariable
-                Product.id == product_id).first()  # @UndefinedVariable
+            product = Product.query.filter(
+                Product.id == product_id).first()
             if not product:
                 abort(404)
             product.notes.append(note)
@@ -140,22 +140,22 @@ class ProductNoteApi(Resource):
 
     @marshal_with(note_fields)
     def get(self, product_id, note_id):
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
+        product = Product.query.filter(
+            Product.id == product_id).first()
         if not product:
             abort(404)
-        note = Note.query.filter(Note.id == note_id).first()  # @UndefinedVariable
+        note = Note.query.filter(Note.id == note_id).first()
         if not note:
             abort(404)
         return note
 
     @auth.login_required
     def delete(self, product_id, note_id):
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
+        product = Product.query.filter(
+            Product.id == product_id).first()
         if not product:
             abort(404)
-        note = Note.query.filter(Note.id == note_id).first()  # @UndefinedVariable
+        note = Note.query.filter(Note.id == note_id).first()
         if not note:
             abort(404)
         product.notes.remove(note)
@@ -166,11 +166,11 @@ class ProductNoteApi(Resource):
     @marshal_with(note_fields)
     def put(self, product_id, note_id):
         args = note_parser.parse_args()
-        product = Product.query.filter(  # @UndefinedVariable
-            Product.id == product_id).first()  # @UndefinedVariable
+        product = Product.query.filter(
+            Product.id == product_id).first()
         if not product:
             abort(404)
-        note = Note.query.filter(Note.id == note_id).first()  # @UndefinedVariable
+        note = Note.query.filter(Note.id == note_id).first()
         if not note:
             abort(404)
         note.note = args['note']

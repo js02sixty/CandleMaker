@@ -27,7 +27,7 @@ class User(Base):
     email = Column(String(30))
     group_id = Column(Integer, ForeignKey('user_groups.id'))
     createdby = Column(String(30))
-    editedby = Column(String(30))    
+    editedby = Column(String(30))
     created = Column(DateTime, default=datetime.utcnow)
     edited = Column(DateTime, onupdate=datetime.utcnow())
 
@@ -61,7 +61,7 @@ class Note(Base):
     id = Column(Integer, primary_key=True)
     note = Column(Text, nullable=False)
     createdby = Column(String(30))
-    editedby = Column(String(30))    
+    editedby = Column(String(30))
     created = Column(DateTime, default=datetime.utcnow)
     edited = Column(DateTime, onupdate=datetime.utcnow())
 
@@ -76,8 +76,8 @@ class ProductType(Base):
     __tablename__ = 'product_types'
     id = Column(Integer, primary_key=True)
     type = Column(String(30))
-    
-    
+
+
 class SiteSettings(Base):
     __tablename__ = 'site_settings'
     items_per_page = Column(Integer, primary_key=True)

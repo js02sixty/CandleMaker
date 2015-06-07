@@ -23,29 +23,29 @@ class NoteApi(Resource):
 
     @marshal_with(note_fields)
     def get(self, note_id):
-        note = Note.query.filter(  # @UndefinedVariable
-            Note.id == note_id).first()  # @UndefinedVariable
+        note = Note.query.filter(
+            Note.id == note_id).first()
         if not note:
             abort(404)
         return note
 
     def delete(self, note_id):
-        note = Note.query.filter(  # @UndefinedVariable
-            Note.id == note_id).first()  # @UndefinedVariable
+        note = Note.query.filter(
+            Note.id == note_id).first()
         if not note:
             abort(404)
-        db_session.delete(note)  # @UndefinedVariable
-        db_session.commit()  # @UndefinedVariable
+        db_session.delete(note)
+        db_session.commit()
         return {}, 204
 
     @marshal_with(note_fields)
     def put(self, note_id):
         args = note_parser.parse_args()
-        note = Note.query.filter(  # @UndefinedVariable
-            Note.id == note_id).first()  # @UndefinedVariable
+        note = Note.query.filter(
+            Note.id == note_id).first()
         if not note:
             abort(404)
         note.note = args['note']
-        db_session.add(note)  # @UndefinedVariable
-        db_session.commit()  # @UndefinedVariable
+        db_session.add(note)
+        db_session.commit()
         return note, 201

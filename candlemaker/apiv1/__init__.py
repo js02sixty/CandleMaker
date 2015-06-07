@@ -13,14 +13,16 @@ from sqlalchemy.orm.exc import NoResultFound
 
 auth = HTTPBasicAuth()
 
+
 @auth.error_handler
 def auth_error():
     abort(401)
 
+
 @auth.get_password
 def get_pw(username):
     try:
-        users = User.query.filter(User.username == username).one()  # @UndefinedVariable
+        users = User.query.filter(User.username == username).one()
         if username == users.username:
             return users.password
     except NoResultFound:
@@ -29,12 +31,11 @@ def get_pw(username):
 
 def group_check(user, group):
     try:
-        u = User.query.filter(User.username == user).first()  # @UndefinedVariable
+        u = User.query.filter(User.username == user).first()
         if group in u.group.name:
             return True
     except NoResultFound:
         return False
-
 
 
 errors = {
@@ -55,6 +56,7 @@ errors = {
 
 apiv1 = Blueprint('apiv1', __name__, url_prefix='/api/v1')
 api = Api(apiv1, errors=errors)
+
 
 class Info(Resource):
 
@@ -85,4 +87,6 @@ api.add_resource(UserGroupApi, '/usergroups/<int:user_group_id>')
 api.add_resource(ProductListApi, '/products')
 api.add_resource(ProductApi, '/products/<int:product_id>')
 api.add_resource(ProductNoteListApi, '/products/<int:product_id>/notes')
-api.add_resource(ProductNoteApi, '/products/<int:product_id>/notes/<int:note_id>')
+api.add_resource(
+    ProductNoteApi,
+     '/products/<int:product_id>/notes/<int:note_id>')

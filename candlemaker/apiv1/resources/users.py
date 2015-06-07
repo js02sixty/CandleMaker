@@ -41,7 +41,7 @@ class UserListApi(Resource):
 
     @marshal_with(user_fields)
     def get(self):
-        user = User.query.all()  # @UndefinedVariable
+        user = User.query.all()
         return user
 
     @auth.login_required
@@ -50,16 +50,16 @@ class UserListApi(Resource):
         if group_check(auth.username(), 'administrators'):
             args = parser.parse_args()
             user = User(
-                username = args['username'],
-                password = args['password'],
-                first_name = args['first_name'],
-                last_name = args['last_name'],
-                email = args['email'],
-                group_id = args['group_id'],
-                createdby = auth.username()
+                username=args['username'],
+                password=args['password'],
+                first_name=args['first_name'],
+                last_name=args['last_name'],
+                email=args['email'],
+                group_id=args['group_id'],
+                createdby=auth.username()
             )
-            db_session.add(user)  # @UndefinedVariable
-            db_session.commit()  # @UndefinedVariable
+            db_session.add(user)
+            db_session.commit()
             return user, 201
         else:
             abort(401)
@@ -69,18 +69,18 @@ class UserApi(Resource):
 
     @marshal_with(user_fields)
     def get(self, user_id):
-        user = User.query.filter(User.id == user_id).first()  # @UndefinedVariable
+        user = User.query.filter(User.id == user_id).first()
         if not user:
             abort(404)
         return user
 
     def delete(self, user_id):
         if group_check(auth.username(), 'administrators'):
-            user = User.query.filter(User.id == user_id).first()  # @UndefinedVariable
+            user = User.query.filter(User.id == user_id).first()
             if not user:
                 abort(404)
-            db_session.delete(user)  # @UndefinedVariable
-            db_session.commit()  # @UndefinedVariable
+            db_session.delete(user)
+            db_session.commit()
             return {}, 204
         else:
             abort(401)
@@ -89,7 +89,7 @@ class UserApi(Resource):
     def put(self, user_id):
         if group_check(auth.username(), 'administrators'):
             args = parser.parse_args()
-            user = User.query.filter(User.id == user_id).first()  # @UndefinedVariable
+            user = User.query.filter(User.id == user_id).first()
             if not user:
                 abort(404)
             user.username = args["username"]
@@ -99,8 +99,8 @@ class UserApi(Resource):
             user.email = args["email"]
             user.group_id = args["group_id"]
             user.editedby = auth.username()
-            db_session.add(user)  # @UndefinedVariable
-            db_session.commit()  # @UndefinedVariable
+            db_session.add(user)
+            db_session.commit()
             return user, 201
         else:
             abort(401)

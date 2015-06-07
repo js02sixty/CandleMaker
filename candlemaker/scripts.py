@@ -9,18 +9,18 @@ from candlemaker.models import User, UserGroup, Product, Note, SiteSettings
 
 
 def load_default():
-    db_session.add_all([  # @UndefinedVariable
+    db_session.add_all([
         UserGroup(name='administrators'),
         UserGroup(name='users'),
         SiteSettings(items_per_page=20)
     ])
-    db_session.commit()  # @UndefinedVariable
+    db_session.commit()
 
-    g_admins = UserGroup.query.filter(  # @UndefinedVariables
-        UserGroup.name == 'administrators').first()  # @UndefinedVariable
-    g_users = UserGroup.query.filter(  # @UndefinedVariable
-        UserGroup.name == 'users').first()  # @UndefinedVariable
-        
+    g_admins = UserGroup.query.filter(
+        UserGroup.name == 'administrators').first()
+    g_users = UserGroup.query.filter(
+        UserGroup.name == 'users').first()
+
     u_admin = User(
         username='admin',
         password='password',
@@ -38,8 +38,8 @@ def load_default():
         createdby='admin'
     )
 
-    db_session.add_all([u_admin, u_john])  # @UndefinedVariable
-    db_session.commit()  # @UndefinedVariable
+    db_session.add_all([u_admin, u_john])
+    db_session.commit()
 
 
 def load_sample():
@@ -63,5 +63,5 @@ def load_sample():
     p2.notes.append(Note(note='This candle rules!'))
     p2.notes.append(Note(note="It's Purple"))
 
-    db_session.add_all([p1, p2])  # @UndefinedVariable
-    db_session.commit()  # @UndefinedVariable
+    db_session.add_all([p1, p2])
+    db_session.commit()

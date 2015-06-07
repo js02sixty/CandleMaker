@@ -8,6 +8,7 @@ from flask import Blueprint
 
 home = Blueprint('home', __name__, static_folder='static', static_url_path='')
 
+
 @home.route('/')
 @home.route('/admin')
 @home.route('/products')
