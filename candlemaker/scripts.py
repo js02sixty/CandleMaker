@@ -23,20 +23,23 @@ def load_default():
 
     u_admin = User(
         username='admin',
-        password='password',
         email='admin@requiescents.com',
         group_id=g_admins.id,
         createdby='admin'
     )
+
+    u_admin.hash_password('password')
+
     u_john = User(
         username='john',
         first_name='John',
         last_name='Saba',
-        password='password',
         email='js02sixty@gmail.com',
         group_id=g_users.id,
         createdby='admin'
     )
+
+    u_john.hash_password('password')
 
     db_session.add_all([u_admin, u_john])
     db_session.commit()

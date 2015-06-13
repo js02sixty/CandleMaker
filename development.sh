@@ -1,3 +1,5 @@
-source env / bin / activate
+#!/bin/sh
+
+source env/bin/activate
 
 ipython runserver.py

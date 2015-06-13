@@ -9,6 +9,7 @@ from flask_restful import Api, abort, wraps
 from flask_httpauth import HTTPDigestAuth, HTTPBasicAuth
 from candlemaker.models import User
 from flask_restful import Resource, reqparse
+from flask import g
 from sqlalchemy.orm.exc import NoResultFound
 
 auth = HTTPBasicAuth()
@@ -19,14 +20,23 @@ def auth_error():
     abort(401)
 
 
-@auth.get_password
-def get_pw(username):
-    try:
-        users = User.query.filter(User.username == username).one()
-        if username == users.username:
-            return users.password
-    except NoResultFound:
+# @auth.get_password
+# def get_pw(username):
+#     try:
+#         users = User.query.filter(User.username == username).one()
+#         if username == users.username:
+#             return users.password
+#     except NoResultFound:
+#         return False
+
+
+@auth.verify_password
+def verify_password(username, password):
+    user = User.query.filter_by(username=username).first()
+    if not user or not user.verify_password(password):
         return False
+    g.user = user
+    return True
 
 
 def group_check(user, group):

@@ -4,6 +4,7 @@ from sqlalchemy import Column, Table, Integer, String, \
 from .database import Base
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
+from passlib.apps import custom_app_context as pwd_context
 
 
 class UserGroup(Base):
@@ -21,7 +22,7 @@ class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     username = Column(String(30), unique=True)
-    password = Column(String(30))
+    password_hash = Column(String(128))
     first_name = Column(String(30))
     last_name = Column(String(30))
     email = Column(String(30))
@@ -30,6 +31,12 @@ class User(Base):
     editedby = Column(String(30))
     created = Column(DateTime, default=datetime.utcnow)
     edited = Column(DateTime, onupdate=datetime.utcnow())
+
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
 
 
 product_note = Table('product_notes', Base.metadata,
