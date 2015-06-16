@@ -12,6 +12,15 @@ app.config.from_envvar('CANDLEMAKER_SETTINGS', silent=True)
 from candlemaker.database import db_session
 
 
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers',
+                         'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
+    return response
+
+
 @app.teardown_appcontext
 def shutdown_session(exception=None):
     db_session.remove()

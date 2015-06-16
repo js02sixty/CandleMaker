@@ -75,6 +75,7 @@ class Info(Resource):
         return {'message': 'hello ' + auth.username()}
 
 
+from candlemaker.apiv1.token import GetToken
 from candlemaker.apiv1.resources.users import UserListApi, UserApi
 from candlemaker.apiv1.resources.user_groups import UserGroupListApi, UserGroupApi
 from candlemaker.apiv1.resources.products import (
@@ -88,6 +89,7 @@ from candlemaker.apiv1.resources.site_initialization import (
     InitializeDB, InitSampleDB)
 
 api.add_resource(Info, '')
+api.add_resource(GetToken, '/gettoken')
 api.add_resource(InitializeDB, '/initdb')
 api.add_resource(InitSampleDB, '/initsampledb')
 api.add_resource(UserListApi, '/users')
