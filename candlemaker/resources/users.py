@@ -6,7 +6,7 @@ Created on Apr 6, 2015
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
 from candlemaker.models import User
 from candlemaker.database import db_session
-from candlemaker.apiv1 import auth, group_check
+# from candlemaker.apiv1 import auth, group_check
 
 
 user_group_fields = {
@@ -44,10 +44,10 @@ class UserListApi(Resource):
         user = User.query.all()
         return user
 
-    @auth.login_required
+    # @auth.login_required
     @marshal_with(user_fields)
     def post(self):
-        if group_check(auth.username(), 'administrators'):
+        # if group_check(auth.username(), 'administrators'):
             args = parser.parse_args()
             user = User(
                 username=args['username'],
@@ -56,13 +56,13 @@ class UserListApi(Resource):
                 last_name=args['last_name'],
                 email=args['email'],
                 group_id=args['group_id'],
-                createdby=auth.username()
+                # createdby=auth.username()
             )
             db_session.add(user)
             db_session.commit()
             return user, 201
-        else:
-            abort(401)
+        # else:
+        #     abort(401)
 
 
 class UserApi(Resource):
@@ -74,20 +74,22 @@ class UserApi(Resource):
             abort(404)
         return user
 
+    # @auth.login_required
     def delete(self, user_id):
-        if group_check(auth.username(), 'administrators'):
+        # if group_check(auth.username(), 'administrators'):
             user = User.query.filter(User.id == user_id).first()
             if not user:
                 abort(404)
             db_session.delete(user)
             db_session.commit()
             return {}, 204
-        else:
-            abort(401)
+        # else:
+        #     abort(401)
 
+    # @auth.login_required
     @marshal_with(user_fields)
     def put(self, user_id):
-        if group_check(auth.username(), 'administrators'):
+        # if group_check(auth.username(), 'administrators'):
             args = parser.parse_args()
             user = User.query.filter(User.id == user_id).first()
             if not user:
@@ -102,5 +104,5 @@ class UserApi(Resource):
             db_session.add(user)
             db_session.commit()
             return user, 201
-        else:
-            abort(401)
+        # else:
+        #     abort(401)

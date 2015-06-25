@@ -6,7 +6,7 @@ Created on Apr 8, 2015
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
 from candlemaker.models import Product, Note
 from candlemaker.database import db_session
-from candlemaker.apiv1 import auth, group_check
+# from candlemaker.apiv1 import auth, group_check
 
 
 note_fields = {
@@ -49,24 +49,21 @@ class ProductListApi(Resource):
         user = Product.query.all()
         return user
 
-    @auth.login_required
     @marshal_with(product_fields)
     def post(self):
-        if group_check(auth.username(), 'administrators'):
-            args = product_parser.parse_args()
-            product = Product(
-                name=args['name'],
-                description=args['description'],
-                weight=args['weight'],
-                price=args['price'],
-                pic_url=args['pic_url'],
-                category_id=args['category_id']
-            )
-            db_session.add(product)
-            db_session.commit()
-            return product, 201
-        else:
-            abort(401)
+        args = product_parser.parse_args()
+        product = Product(
+            name=args['name'],
+            description=args['description'],
+            weight=args['weight'],
+            price=args['price'],
+            pic_url=args['pic_url'],
+            category_id=args['category_id']
+        )
+        db_session.add(product)
+        db_session.commit()
+        return product, 201
+
 
 
 class ProductApi(Resource):
@@ -79,7 +76,6 @@ class ProductApi(Resource):
             abort(404)
         return product
 
-    @auth.login_required
     def delete(self, product_id):
         product = Product.query.filter(
             Product.id == product_id).first()
@@ -89,7 +85,6 @@ class ProductApi(Resource):
         db_session.commit()
         return {}, 204
 
-    @auth.login_required
     @marshal_with(product_fields)
     def put(self, product_id):
         args = product_parser.parse_args()
@@ -118,7 +113,6 @@ class ProductNoteListApi(Resource):
             abort(404)
         return product.notes
 
-    @auth.login_required
     @marshal_with(note_fields)
     def post(self, product_id):
         if group_check(auth.username(), 'administrators'):
@@ -132,8 +126,7 @@ class ProductNoteListApi(Resource):
             db_session.add(product)
             db_session.commit()
             return note, 201
-        else:
-            abort(401)
+
 
 
 class ProductNoteApi(Resource):
@@ -149,7 +142,6 @@ class ProductNoteApi(Resource):
             abort(404)
         return note
 
-    @auth.login_required
     def delete(self, product_id, note_id):
         product = Product.query.filter(
             Product.id == product_id).first()
@@ -162,7 +154,6 @@ class ProductNoteApi(Resource):
         db_session.commit()
         return {}, 204
 
-    @auth.login_required
     @marshal_with(note_fields)
     def put(self, product_id, note_id):
         args = note_parser.parse_args()

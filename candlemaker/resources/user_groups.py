@@ -6,7 +6,7 @@ Created on Apr 6, 2015
 from flask_restful import Resource, fields, marshal_with, reqparse, abort
 from candlemaker.models import UserGroup
 from candlemaker.database import db_session
-from candlemaker.apiv1 import auth, group_check
+# from candlemaker.apiv1 import auth, group_check
 
 
 user_fields = {
@@ -39,29 +39,23 @@ parser.add_argument('name', type=str)
 
 class UserGroupListApi(Resource):
 
-    @auth.login_required
     @marshal_with(user_group_fields)
     def get(self):
-        if group_check(auth.username(), 'administrators'):
-            user_group = UserGroup.query.all()
-            return user_group
-        else:
-            abort(401)
+        user_group = UserGroup.query.all()
+        return user_group
 
-    @auth.login_required
+
     @marshal_with(user_group_fields)
     def post(self):
         """May decide latter to remove posting of new groups."""
-        if group_check(auth.username(), 'administrators'):
-            args = parser.parse_args()
-            user_group = UserGroup()
-            user_group.name = args['name']
-            user_group.createdby = auth.username()
-            db_session.add(user_group)
-            db_session.commit()
-            return user_group, 201
-        else:
-            abort(401)
+        args = parser.parse_args()
+        user_group = UserGroup()
+        user_group.name = args['name']
+        user_group.createdby = auth.username()
+        db_session.add(user_group)
+        db_session.commit()
+        return user_group, 201
+
 
 
 class UserGroupApi(Resource):
