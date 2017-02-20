@@ -84,16 +84,16 @@ class Info(Resource):
         return {'message': 'Hello ' + current_user.username}
 
 
-from resources.users import UserListApi, UserApi
-from resources.user_groups import UserGroupListApi, UserGroupApi
-from resources.products import (
+from candlemaker.resources.users import UserListApi, UserApi
+from candlemaker.resources.user_groups import UserGroupListApi, UserGroupApi
+from candlemaker.resources.products import (
     ProductListApi,
     ProductApi,
     ProductNoteListApi,
     ProductNoteApi
 )
-from resources.notes import NoteApi
-from resources.site_initialization import (
+from candlemaker.resources.notes import NoteApi
+from candlemaker.resources.site_initialization import (
     InitializeDB, InitSampleDB)
 
 api.add_resource(Info, '/info')
